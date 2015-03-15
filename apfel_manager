@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="apfel_parallel.js"></script>
+    <script>
+
+var canvas;
+var context;
+var imageData1;
+var imageData2;
+var x_links;
+var x_rechts;
+var y_oben;
+var y_unten;
+
+var breite;
+var hoehe;
+
+var zoom=0.5;
+
+window.addEventListener("load", init, false);
+
+function init() {
+  x_links = -2;
+  x_rechts = 1;
+  y_oben = -1.5;
+  y_unten = 1.5;
+  start(x_links,x_rechts,y_oben,y_unten)
+}
+
+
+function start(x_links,x_rechts,y_oben,y_unten) {
+  var apfel1 = new Worker("apfel_worker1.js");
+  var apfel2 = new Worker("apfel_worker1.js");
+  apfel1.addEventListener("message", ausgabe1, false); 
+  apfel2.addEventListener("message", ausgabe2, false); 
+  document.getElementById("status").innerHTML="Warten auf Antwort";
+  canvas = document.getElementById("canvas1");
+  context = canvas.getContext('2d');
+  breite = canvas.width;
+  hoehe = canvas.height;
+  apfel1.postMessage([x_links,(x_links+x_rechts)/2,y_oben,y_unten,(x_rechts-x_links)/breite]);
+  apfel2.postMessage([(x_links+x_rechts)/2,x_rechts,y_oben,y_unten,(x_rechts-x_links)/breite]);
+  imageData1 = context.createImageData(parseInt(breite/2), hoehe);
+  imageData2 = context.createImageData(parseInt(breite/2), hoehe);
+}
+
+function ausgabe1(event) {
+  var bildDaten;
+  bildDaten = event.data;
+  for (var x = 0; x < breite/2; x++) {
+    for (var y = 0; y < hoehe ; y++) {
+      setPixel(imageData1, x, y, bildDaten[x][y], 0, 0, 255); 
+    }
+  }
+  context.putImageData(imageData1, 0, 0); 
+  document.getElementById("status").innerHTML="Berechnung Fertig 1";
+}
+
+function ausgabe2(event) {
+  var bildDaten;
+  bildDaten = event.data;
+  for (var x = 0; x < breite/2; x++) {
+    for (var y = 0; y < hoehe ; y++) {
+      setPixel(imageData2, x, y, bildDaten[x][y], 0, 0, 255); 
+    }
+  }
+  context.putImageData(imageData2, 300, 0); 
+  document.getElementById("status").innerHTML="Berechnung Fertig 2";
+}
+
+
+function setPixel(imageData, x, y, rot, gruen, blau, a) {
+    index = (x + y * imageData.width) * 4;
+    imageData.data[index+0] = rot;
+    imageData.data[index+1] = gruen;
+    imageData.data[index+2] = blau;
+    imageData.data[index+3] = a;
+}
+
+document.addEventListener('touchstart', function(event) {
+    event.preventDefault();
+    var touch = event.touches[0];
+    touch_x=touch.pageX;
+    touch_y=touch.pageY;
+    document.getElementById("touch_x").innerHTML=touch_x;
+    document.getElementById("touch_y").innerHTML=touch_y;
+    apfel_breite = x_rechts-x_links;
+    apfel_hoehe = y_unten-y_oben;
+    x_apfel_touch = x_links+(touch_x*apfel_breite/breite);
+    y_apfel_touch = y_oben+(touch_y*apfel_hoehe/hoehe);  
+
+    x_links = x_apfel_touch-(apfel_breite/2*zoom);
+    x_rechts = x_apfel_touch+(apfel_breite/2*zoom);
+    y_oben = y_apfel_touch-(apfel_hoehe/2*zoom);
+    y_unten = y_apfel_touch+(apfel_hoehe/2*zoom);
+    start(x_links,x_rechts,y_oben,y_unten)
+}, false);
+
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas1" width=600" height="600"></canvas>
+    <br />
+    <div id="status">Kein Status</div>
+    <div id="touch_x"></div>
+    <div id="touch_y"></div>
+    <div id="legende">Programmiert Andreas Urben 15.04.2013</div>
+  </body>
+</html>
