@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="apfel_parallel.js"></script>
+    <script type="text/javascript" src="apfel_worker.js"></script>
     <script>
 
 var canvas;
@@ -30,8 +30,8 @@ function init() {
 
 
 function start(x_links,x_rechts,y_oben,y_unten) {
-  var apfel1 = new Worker("apfel_worker1.js");
-  var apfel2 = new Worker("apfel_worker1.js");
+  var apfel1 = new Worker("apfel_worker.js");
+  var apfel2 = new Worker("apfel_worker.js");
   apfel1.addEventListener("message", ausgabe1, false); 
   apfel2.addEventListener("message", ausgabe2, false); 
   document.getElementById("status").innerHTML="Warten auf Antwort";
