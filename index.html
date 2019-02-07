@@ -103,6 +103,30 @@ document.addEventListener('touchstart', function(event) {
     start(x_links,x_rechts,y_oben,y_unten)
 }, false);
 
+document.addEventListener('click', function(event) {
+
+var x = event.clientX;     
+var y = event.clientY; 
+
+
+    event.preventDefault();
+    var touch = event.touches[0];
+    touch_x=event.clientX;
+    touch_y=event.clientY;
+    document.getElementById("touch_x").innerHTML=touch_x;
+    document.getElementById("touch_y").innerHTML=touch_y;
+    apfel_breite = x_rechts-x_links;
+    apfel_hoehe = y_unten-y_oben;
+    x_apfel_touch = x_links+(touch_x*apfel_breite/breite);
+    y_apfel_touch = y_oben+(touch_y*apfel_hoehe/hoehe);  
+
+    x_links = x_apfel_touch-(apfel_breite/2*zoom);
+    x_rechts = x_apfel_touch+(apfel_breite/2*zoom);
+    y_oben = y_apfel_touch-(apfel_hoehe/2*zoom);
+    y_unten = y_apfel_touch+(apfel_hoehe/2*zoom);
+    start(x_links,x_rechts,y_oben,y_unten)
+}, false);
+
     </script>
   </head>
   <body>
