@@ -30,8 +30,12 @@ function init() {
   breite=600;
   hoehe=600;
 
-  document.getElementById("canvas1").setAttribute("width",breite);
-  document.getElementById("canvas1").setAttribute("height",hoehe);
+  var canvas1=document.getElementById("canvas1");
+  canvas1.setAttribute("width",breite);
+  canvas1.setAttribute("height",hoehe);
+  canvas1.addEventListener("mousedown", doMouseDown, false);
+  // canvas1.addEventListener("touchstart", doTouchStart, false)
+  
 
   x_links=-2;
   x_rechts=1;
@@ -84,7 +88,7 @@ function setPixel(imageData, x, y, rot, gruen, blau, a) {
     imageData.data[index+3]=a;
 }
 
-document.addEventListener('touchstart', function(event) {
+document.addEventListener('112touchstart', function(event) {
     event.preventDefault();
     var touch = event.touches[0];
     touch_x=touch.pageX;
@@ -103,26 +107,23 @@ document.addEventListener('touchstart', function(event) {
     start(x_links,x_rechts,y_oben,y_unten)
 }, false);
 
-document.addEventListener('click', function(event) {
-  // var x = event.clientX;     
-  // var y = event.clientY; 
-    // event.preventDefault();
-    var touch = event.touches[0];
-    touch_x=event.clientX;
-    touch_y=event.clientY;
-    document.getElementById("touch_x").innerHTML=touch_x;
-    document.getElementById("touch_y").innerHTML=touch_y;
-    apfel_breite = x_rechts-x_links;
-    apfel_hoehe = y_unten-y_oben;
-    x_apfel_touch = x_links+(touch_x*apfel_breite/breite);
-    y_apfel_touch = y_oben+(touch_y*apfel_hoehe/hoehe);  
+function doMouseDown(event) {
+	touch_x=event.pageX;
+  touch_y=event.pageY;
+  document.getElementById("touch_x").innerHTML=touch_x;
+  document.getElementById("touch_y").innerHTML=touch_y;
+  apfel_breite = x_rechts-x_links;
+  apfel_hoehe = y_unten-y_oben;
+  x_apfel_touch = x_links+(touch_x*apfel_breite/breite);
+  y_apfel_touch = y_oben+(touch_y*apfel_hoehe/hoehe);  
 
-    x_links = x_apfel_touch-(apfel_breite/2*zoom);
-    x_rechts = x_apfel_touch+(apfel_breite/2*zoom);
-    y_oben = y_apfel_touch-(apfel_hoehe/2*zoom);
-    y_unten = y_apfel_touch+(apfel_hoehe/2*zoom);
-    start(x_links,x_rechts,y_oben,y_unten)
-}, false);
+  x_links = x_apfel_touch-(apfel_breite/2*zoom);
+  x_rechts = x_apfel_touch+(apfel_breite/2*zoom);
+  y_oben = y_apfel_touch-(apfel_hoehe/2*zoom);
+  y_unten = y_apfel_touch+(apfel_hoehe/2*zoom);
+  start(x_links,x_rechts,y_oben,y_unten)
+}
+
 
     </script>
   </head>
