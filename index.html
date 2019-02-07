@@ -104,12 +104,9 @@ document.addEventListener('touchstart', function(event) {
 }, false);
 
 document.addEventListener('click', function(event) {
-
-var x = event.clientX;     
-var y = event.clientY; 
-
-
-    event.preventDefault();
+  // var x = event.clientX;     
+  // var y = event.clientY; 
+    // event.preventDefault();
     var touch = event.touches[0];
     touch_x=event.clientX;
     touch_y=event.clientY;
