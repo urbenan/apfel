@@ -24,11 +24,14 @@ window.addEventListener("load", init, false);
 
 function init() {
 
-  breite=screen.availWidth;
-  hoehe=screen.availHeight;
+  // breite=screen.availWidth;
+  // hoehe=screen.availHeight;
+  
+  breite=window.innerWidth;
+  hoehe=window.innerHeight;
 
-  breite=600;
-  hoehe=600;
+  // breite=600;
+  // hoehe=600;
 
   var canvas1=document.getElementById("canvas1");
   canvas1.setAttribute("width",breite);
